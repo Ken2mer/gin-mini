@@ -1,9 +1,11 @@
 package gin
 
+import "net/http"
+
 // Context is the most important part of gin.
 type Context struct {
 	// writermem responseWriter
-	// Request   *http.Request
+	Request *http.Request
 	// Writer    ResponseWriter
 
 	// Params   Params
