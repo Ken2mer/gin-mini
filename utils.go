@@ -2,6 +2,8 @@ package gin
 
 import "os"
 
+type H map[string]interface{}
+
 func resolveAddress(addr []string) string {
 	switch len(addr) {
 	case 0:

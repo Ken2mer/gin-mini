@@ -1,12 +1,16 @@
 package gin
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/Ken2mer/gin/render"
+)
 
 // Context is the most important part of gin.
 type Context struct {
 	// writermem responseWriter
 	Request *http.Request
-	// Writer    ResponseWriter
+	Writer  ResponseWriter
 
 	// Params   Params
 	// handlers HandlersChain
@@ -32,4 +36,24 @@ type Context struct {
 	// formCache url.Values
 
 	// sameSite http.SameSite
+}
+
+// Render writes the response headers and calls render.Render to render data.
+func (c *Context) Render(code int, r render.Render) {
+	// c.Status(code)
+
+	// if !bodyAllowedForStatus(code) {
+	// 	r.WriteContentType(c.Writer)
+	// 	c.Writer.WriteHeaderNow()
+	// 	return
+	// }
+
+	if err := r.Render(c.Writer); err != nil {
+		panic(err)
+	}
+}
+
+// JSON serializes the given struct as JSON into the response body.
+func (c *Context) JSON(code int, obj interface{}) {
+	c.Render(code, render.JSON{Data: obj})
 }
