@@ -8,9 +8,9 @@ import (
 
 // Context is the most important part of gin.
 type Context struct {
-	// writermem responseWriter
-	Request *http.Request
-	Writer  ResponseWriter
+	writermem responseWriter
+	Request   *http.Request
+	Writer    ResponseWriter
 
 	// Params   Params
 	// handlers HandlersChain
@@ -36,6 +36,21 @@ type Context struct {
 	// formCache url.Values
 
 	// sameSite http.SameSite
+}
+
+func (c *Context) reset() {
+	c.Writer = &c.writermem
+	// c.Params = c.Params[:0]
+	// c.handlers = nil
+	// c.index = -1
+
+	// c.fullPath = ""
+	// c.Keys = nil
+	// c.Errors = c.Errors[:0]
+	// c.Accepted = nil
+	// c.queryCache = nil
+	// c.formCache = nil
+	*c.params = (*c.params)[:0]
 }
 
 // Render writes the response headers and calls render.Render to render data.
