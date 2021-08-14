@@ -6,6 +6,12 @@ import (
 )
 
 // Engine is the framework's instance, it contains the muxer, middleware and configuration settings.
+// HandlerFunc defines the handler used by gin middleware as return value.
+type HandlerFunc func(*Context)
+
+// HandlersChain defines a HandlerFunc array.
+type HandlersChain []HandlerFunc
+
 type Engine struct {
 	RouterGroup
 
@@ -13,12 +19,6 @@ type Engine struct {
 	trees     methodTrees
 	maxParams uint16
 }
-
-// HandlerFunc defines the handler used by gin middleware as return value.
-type HandlerFunc func(*Context)
-
-// HandlersChain defines a HandlerFunc array.
-type HandlersChain []HandlerFunc
 
 // New returns a new blank Engine instance without any middleware attached.
 func New() *Engine {
