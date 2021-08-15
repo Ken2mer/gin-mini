@@ -92,11 +92,42 @@ func (engine *Engine) Run(addr ...string) (err error) {
 // ServeHTTP conforms to the http.Handler interface.
 func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	c := engine.pool.Get().(*Context)
-	// c.writermem.reset(w)
+	c.writermem.reset(w)
 	c.Request = req
-	// c.reset()
+	c.reset()
 
-	// engine.handleHTTPRequest(c)
+	engine.handleHTTPRequest(c)
 
 	engine.pool.Put(c)
+}
+
+func (engine *Engine) handleHTTPRequest(c *Context) {
+	// httpMethod := c.Request.Method
+	rPath := c.Request.URL.Path
+	unescape := false
+
+	// Find root of the tree for the given HTTP method
+	t := engine.trees
+	for i, tl := 0, len(t); i < tl; i++ {
+		// if t[i].method != httpMethod {
+		// 	continue
+		// }
+		root := t[i].root
+		// Find route in tree
+		value := root.getValue(rPath, c.params, unescape)
+		// if value.params != nil {
+		// 	c.Params = *value.params
+		// }
+		if value.handlers != nil {
+			c.handlers = value.handlers
+			// c.fullPath = value.fullPath
+			c.Next()
+			// c.writermem.WriteHeaderNow()
+			return
+		}
+		break
+	}
+
+	// c.handlers = engine.allNoRoute
+	// serveError(c, http.StatusNotFound, default404Body)
 }

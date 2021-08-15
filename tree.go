@@ -25,11 +25,20 @@ func (trees methodTrees) get(method string) *node {
 	return nil
 }
 
+type nodeType uint8
+
+// const (
+// 	static nodeType = iota // default
+// 	root
+// 	param
+// 	catchAll
+// )
+
 type node struct {
 	path string
 	// indices   string
-	// wildChild bool
-	// nType nodeType
+	wildChild bool
+	nType     nodeType
 	// priority uint32
 	children []*node // child nodes, at most 1 :param style node at the end of the array
 	handlers HandlersChain
@@ -59,4 +68,52 @@ func (n *node) insertChild(path string, fullPath string, handlers HandlersChain)
 	n.path = path
 	n.handlers = handlers
 	// n.fullPath = fullPath
+}
+
+type nodeValue struct {
+	handlers HandlersChain
+	// params   *Params
+	// tsr bool
+	// fullPath string
+}
+
+func (n *node) getValue(path string, params *Params, unescape bool) (value nodeValue) {
+
+	// walk: // Outer loop for walking the tree
+	for {
+		prefix := n.path
+		if len(path) > len(prefix) {
+			if path[:len(prefix)] == prefix {
+				path = path[len(prefix):]
+
+				// If there is no wildcard pattern, recommend a redirection
+				if !n.wildChild {
+					// Nothing found.
+					// We can recommend to redirect to the same URL without a
+					// trailing slash if a leaf exists for that path.
+					// value.tsr = path == "/" && n.handlers != nil
+					return
+				}
+
+				// Handle wildcard child, which is always at the end of the array
+				// n = n.children[len(n.children)-1]
+
+				switch n.nType {
+				default:
+					panic("invalid node type")
+				}
+			}
+		}
+
+		if path == prefix {
+			if value.handlers = n.handlers; value.handlers != nil {
+				// value.fullPath = n.fullPath
+				return
+			}
+
+			return
+		}
+
+		return
+	}
 }

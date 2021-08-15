@@ -53,6 +53,15 @@ func (c *Context) reset() {
 	// *c.params = (*c.params)[:0]
 }
 
+// Next executes the pending handlers in the chain inside the calling handler.
+func (c *Context) Next() {
+	c.index++
+	for c.index < int8(len(c.handlers)) {
+		c.handlers[c.index](c)
+		c.index++
+	}
+}
+
 // Render writes the response headers and calls render.Render to render data.
 func (c *Context) Render(code int, r render.Render) {
 	// c.Status(code)
