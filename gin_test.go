@@ -47,3 +47,21 @@ func TestAddRoute(t *testing.T) {
 	router.addRoute("POST", "/post", HandlersChain{func(_ *Context) {}})
 	assert.Len(t, router.trees, 2)
 }
+
+func TestEngineHandleContext(t *testing.T) {
+	r := New()
+	r.GET("/", func(c *Context) {
+		// c.Request.URL.Path = "/v2"
+		r.HandleContext(c)
+	})
+	// v2 := r.Group("/v2")
+	// {
+	// 	v2.GET("/", func(c *Context) {})
+	// }
+
+	assert.NotPanics(t, func() {
+		// w := performRequest(r, "GET", "/")
+		_ = performRequest(r, "GET", "/")
+		// assert.Equal(t, 301, w.Code)
+	})
+}

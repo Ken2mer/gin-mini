@@ -101,6 +101,15 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	engine.pool.Put(c)
 }
 
+// HandleContext re-enter a context that has been rewritten.
+func (engine *Engine) HandleContext(c *Context) {
+	// oldIndexValue := c.index
+	// c.reset()
+	engine.handleHTTPRequest(c)
+
+	// c.index = oldIndexValue
+}
+
 func (engine *Engine) handleHTTPRequest(c *Context) {
 	// httpMethod := c.Request.Method
 	rPath := c.Request.URL.Path
