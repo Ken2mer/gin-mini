@@ -15,7 +15,7 @@ type Context struct {
 	// Params   Params
 	handlers HandlersChain
 	index    int8
-	// fullPath string
+	fullPath string
 
 	engine *Engine
 	params *Params
@@ -51,6 +51,11 @@ func (c *Context) reset() {
 	// c.queryCache = nil
 	// c.formCache = nil
 	// *c.params = (*c.params)[:0]
+}
+
+// FullPath returns a matched route full path.
+func (c *Context) FullPath() string {
+	return c.fullPath
 }
 
 // Next executes the pending handlers in the chain inside the calling handler.

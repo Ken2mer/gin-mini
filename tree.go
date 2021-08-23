@@ -42,7 +42,7 @@ type node struct {
 	// priority uint32
 	children []*node // child nodes, at most 1 :param style node at the end of the array
 	handlers HandlersChain
-	// fullPath string
+	fullPath string
 }
 
 func (n *node) addRoute(path string, handlers HandlersChain) {
@@ -67,14 +67,14 @@ func (n *node) insertChild(path string, fullPath string, handlers HandlersChain)
 	// If no wildcard was found, simply insert the path and handle
 	n.path = path
 	n.handlers = handlers
-	// n.fullPath = fullPath
+	n.fullPath = fullPath
 }
 
 type nodeValue struct {
 	handlers HandlersChain
 	// params   *Params
 	// tsr bool
-	// fullPath string
+	fullPath string
 }
 
 func (n *node) getValue(path string, params *Params, unescape bool) (value nodeValue) {
@@ -107,7 +107,7 @@ func (n *node) getValue(path string, params *Params, unescape bool) (value nodeV
 
 		if path == prefix {
 			if value.handlers = n.handlers; value.handlers != nil {
-				// value.fullPath = n.fullPath
+				value.fullPath = n.fullPath
 				return
 			}
 

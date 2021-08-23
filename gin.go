@@ -129,7 +129,7 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 		// }
 		if value.handlers != nil {
 			c.handlers = value.handlers
-			// c.fullPath = value.fullPath
+			c.fullPath = value.fullPath
 			c.Next()
 			// c.writermem.WriteHeaderNow()
 			return
