@@ -41,6 +41,37 @@ func TestRouterGroupRouteOK(t *testing.T) {
 	// testRouteOK(http.MethodTrace, t)
 }
 
+func TestRouteParamsByName(t *testing.T) {
+	name := ""
+	lastName := ""
+	wild := ""
+	router := New()
+	router.GET("/test/:name/:last_name/*wild", func(c *Context) {
+		name = c.Params.ByName("name")
+		lastName = c.Params.ByName("last_name")
+		var ok bool
+		wild, ok = c.Params.Get("wild")
+
+		assert.True(t, ok)
+		assert.Equal(t, name, c.Param("name"))
+		assert.Equal(t, lastName, c.Param("last_name"))
+
+		assert.Empty(t, c.Param("wtf"))
+		assert.Empty(t, c.Params.ByName("wtf"))
+
+		wtf, ok := c.Params.Get("wtf")
+		assert.Empty(t, wtf)
+		assert.False(t, ok)
+	})
+
+	w := performRequest(router, http.MethodGet, "/test/john/smith/is/super/great")
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, "john", name)
+	assert.Equal(t, "smith", lastName)
+	assert.Equal(t, "/is/super/great", wild)
+}
+
 func TestRouteContextHoldsFullPath(t *testing.T) {
 	router := New()
 

@@ -12,7 +12,7 @@ type Context struct {
 	Request   *http.Request
 	Writer    ResponseWriter
 
-	// Params   Params
+	Params   Params
 	handlers HandlersChain
 	index    int8
 	fullPath string
@@ -85,4 +85,9 @@ func (c *Context) Render(code int, r render.Render) {
 // JSON serializes the given struct as JSON into the response body.
 func (c *Context) JSON(code int, obj interface{}) {
 	c.Render(code, render.JSON{Data: obj})
+}
+
+// Param returns the value of the URL param.
+func (c *Context) Param(key string) string {
+	return c.Params.ByName(key)
 }

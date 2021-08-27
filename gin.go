@@ -69,9 +69,9 @@ func (engine *Engine) addRoute(method, path string, handlers HandlersChain) {
 	root.addRoute(path, handlers)
 
 	// Update maxParams
-	// if paramsCount := countParams(path); paramsCount > engine.maxParams {
-	// 	engine.maxParams = paramsCount
-	// }
+	if paramsCount := countParams(path); paramsCount > engine.maxParams {
+		engine.maxParams = paramsCount
+	}
 }
 
 // Run attaches the router to a http.Server and starts listening and serving HTTP requests.
@@ -124,9 +124,9 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 		root := t[i].root
 		// Find route in tree
 		value := root.getValue(rPath, c.params, unescape)
-		// if value.params != nil {
-		// 	c.Params = *value.params
-		// }
+		if value.params != nil {
+			c.Params = *value.params
+		}
 		if value.handlers != nil {
 			c.handlers = value.handlers
 			c.fullPath = value.fullPath
